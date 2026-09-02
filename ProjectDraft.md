@@ -149,7 +149,7 @@ The user accesses the system through a web browser. The web server processes the
 
 ## 6. Initial ERD
 
-> **Insert ERD Picture Here**
+![ERD Diagram](assets/ERD.png)
 
 The current ERD contains the following main tables:
 

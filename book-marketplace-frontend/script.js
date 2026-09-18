@@ -8,13 +8,8 @@
    PHP back-end will run at: http://127.0.0.1:8000/
    API files are served from: /api/
 */
-const isLocal =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1";
-
-const API_BASE = isLocal
-    ? "http://127.0.0.1:8000/api"
-    : "https://book-marketplace-backend.vercel.app/api";
+const API_BASE =
+    "http://127.0.0.1:8000/api";
 
 
 /* GLOBAL DATA */
@@ -37,6 +32,8 @@ let bookMap = {};
 let userMap = {};
 
 let inventoryMap = {};
+
+let categoryMap = {};
 
 let currentUser = null;
 
@@ -179,19 +176,6 @@ function applyCurrentUserToForms() {
     }
 
 
-    const sellerIdInput =
-        document.getElementById(
-            "seller-id"
-        );
-
-    if (sellerIdInput) {
-        sellerIdInput.value =
-            currentUser.user_id;
-
-        sellerIdInput.readOnly = true;
-    }
-
-
     const customerIdInput =
         document.getElementById(
             "customer-id"
@@ -234,9 +218,21 @@ async function apiRequest(endpoint, options = {}) {
 
     const url = `${API_BASE}/${endpoint}`;
 
+    /* Abort the request if the server takes too long to respond, so the
+       UI shows an error instead of hanging on "Loading..." forever */
+
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(function () {
+        controller.abort();
+    }, 8000);
+
     try {
 
-        const response = await fetch(url, options);
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
 
         /* PHP API returns JSON */
         const text = await response.text();
@@ -269,12 +265,24 @@ async function apiRequest(endpoint, options = {}) {
 
     } catch (error) {
 
+        if (error.name === "AbortError") {
+
+            error = new Error(
+                `Request to ${url} timed out. Is the PHP server running (php -S 127.0.0.1:8000) and reachable?`
+            );
+
+        }
+
         console.error(
             "API Error:",
             error
         );
 
         throw error;
+
+    } finally {
+
+        clearTimeout(timeoutId);
 
     }
 
@@ -344,7 +352,7 @@ async function loadBooks() {
 
         bookList.innerHTML = `
             <tr>
-                <td colspan="9">
+                <td colspan="10">
                     Loading books...
                 </td>
             </tr>
@@ -419,7 +427,7 @@ async function loadBooks() {
 
         bookList.innerHTML = `
             <tr>
-                <td colspan="9">
+                <td colspan="10">
                     Unable to connect to the back-end.
                 </td>
             </tr>
@@ -446,7 +454,7 @@ function renderBooks(listings) {
 
         bookList.innerHTML = `
             <tr>
-                <td colspan="9">
+                <td colspan="10">
                     No books found.
                 </td>
             </tr>
@@ -481,6 +489,9 @@ function renderBooks(listings) {
         const author =
             book ? book.author : "Unknown Author";
 
+        const categoryNames =
+            book ? formatCategoryNames(book) : "Uncategorized";
+
         const sellerName =
             seller
                 ? seller.username
@@ -505,6 +516,10 @@ function renderBooks(listings) {
 
             <td>
                 ${author}
+            </td>
+
+            <td>
+                ${categoryNames}
             </td>
 
             <td>
@@ -640,6 +655,10 @@ function filterBooks() {
             .value;
 
 
+    const selectedCategoryIds =
+        getSelectedFilterCategoryIds();
+
+
     const filtered =
         bookListings.filter(
             function (listing) {
@@ -689,12 +708,30 @@ function filterBooks() {
                     condition;
 
 
+                /* Check category - book must have at least one of the
+                   checked categories (no boxes checked = match everything) */
+
+                const bookCategoryIds =
+                    (book && Array.isArray(book.category_ids))
+                        ? book.category_ids
+                        : [];
+
+                const matchesCategory =
+
+                    selectedCategoryIds.length === 0 ||
+
+                    bookCategoryIds.some(function (categoryId) {
+                        return selectedCategoryIds.includes(categoryId);
+                    });
+
+
                 /* Book must pass all filters */
 
                 return (
                     matchesSearch &&
                     matchesType &&
-                    matchesCondition
+                    matchesCondition &&
+                    matchesCategory
                 );
 
             }
@@ -702,6 +739,204 @@ function filterBooks() {
 
 
     renderBooks(filtered);
+
+}
+
+
+/* LOAD BOOK CATEGORIES (for the List a Book form) */
+/* Rendered as checkboxes, since a book can belong to more than one category */
+
+/* Builds a row of checkboxes for one category list inside a container */
+
+function renderCategoryCheckboxes(container, categories, idPrefix) {
+
+    if (categories.length === 0) {
+
+        container.innerHTML = `
+            <p class="checkbox-group-empty">
+                No categories available.
+            </p>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    categories.forEach(function (category) {
+
+        const optionWrapper =
+            document.createElement("label");
+
+        optionWrapper.className =
+            "checkbox-option";
+
+        const checkbox =
+            document.createElement("input");
+
+        checkbox.type = "checkbox";
+        checkbox.name = "category_ids";
+        checkbox.value = category.category_id;
+        checkbox.id = `${idPrefix}-${category.category_id}`;
+
+        optionWrapper.appendChild(checkbox);
+
+        optionWrapper.appendChild(
+            document.createTextNode(
+                ` ${category.category_name}`
+            )
+        );
+
+        container.appendChild(optionWrapper);
+
+    });
+
+}
+
+
+async function loadCategories() {
+
+    const categoryOptions =
+        document.getElementById(
+            "book-category-options"
+        );
+
+    const filterCategoryOptions =
+        document.getElementById(
+            "filter-category-options"
+        );
+
+    if (!categoryOptions && !filterCategoryOptions) {
+        return;
+    }
+
+    try {
+
+        const categories =
+            await apiRequest(
+                "book_categories.php"
+            );
+
+        /* Keep a lookup of category_id -> category_name for display
+           elsewhere (e.g. the browse table) */
+
+        categoryMap = {};
+
+        categories.forEach(function (category) {
+
+            categoryMap[category.category_id] =
+                category.category_name;
+
+        });
+
+
+        if (categoryOptions) {
+
+            renderCategoryCheckboxes(
+                categoryOptions,
+                categories,
+                "book-category"
+            );
+
+        }
+
+
+        if (filterCategoryOptions) {
+
+            renderCategoryCheckboxes(
+                filterCategoryOptions,
+                categories,
+                "filter-category"
+            );
+
+            /* Re-run the search whenever a filter checkbox is toggled */
+
+            filterCategoryOptions
+                .querySelectorAll('input[name="category_ids"]')
+                .forEach(function (checkbox) {
+
+                    checkbox.addEventListener(
+                        "change",
+                        filterBooks
+                    );
+
+                });
+
+        }
+
+    } catch (error) {
+
+        const message = `
+            <p class="checkbox-group-empty">
+                Unable to load categories.
+            </p>
+        `;
+
+        if (categoryOptions) {
+            categoryOptions.innerHTML = message;
+        }
+
+        if (filterCategoryOptions) {
+            filterCategoryOptions.innerHTML = message;
+        }
+
+        console.error(
+            "Unable to load categories.",
+            error
+        );
+
+    }
+
+}
+
+
+/* Reads the checked category checkboxes from the List a Book form */
+
+function getSelectedCategoryIds() {
+
+    const checkedBoxes =
+        document.querySelectorAll(
+            '#book-category-options input[name="category_ids"]:checked'
+        );
+
+    return Array.from(checkedBoxes).map(function (checkbox) {
+        return Number(checkbox.value);
+    });
+
+}
+
+
+/* Reads the checked category checkboxes from the Browse Books filters */
+
+function getSelectedFilterCategoryIds() {
+
+    const checkedBoxes =
+        document.querySelectorAll(
+            '#filter-category-options input[name="category_ids"]:checked'
+        );
+
+    return Array.from(checkedBoxes).map(function (checkbox) {
+        return Number(checkbox.value);
+    });
+
+}
+
+
+/* Turns a book's category_ids into a readable, comma-separated list
+   of category names, using the categoryMap loaded above */
+
+function formatCategoryNames(book) {
+
+    if (!book || !Array.isArray(book.category_ids) || book.category_ids.length === 0) {
+        return "Uncategorized";
+    }
+
+    return book.category_ids
+        .map(function (categoryId) {
+            return categoryMap[categoryId] || `Category #${categoryId}`;
+        })
+        .join(", ");
 
 }
 
@@ -715,18 +950,36 @@ async function submitBookListing(event) {
     event.preventDefault();
 
 
-    const bookId =
+    /* Must be logged in - seller ID comes from the session, never from a text field */
+
+    if (!requireAuthenticatedCustomer()) {
+        return;
+    }
+
+
+    const title =
         document
-            .getElementById("book-id")
-            .value;
+            .getElementById("book-title")
+            .value
+            .trim();
 
 
-    const sellerId =
-        currentUser
-            ? currentUser.user_id
-            : document
-                .getElementById("seller-id")
-                .value;
+    const author =
+        document
+            .getElementById("book-author")
+            .value
+            .trim();
+
+
+    const isbn =
+        document
+            .getElementById("book-isbn")
+            .value
+            .trim();
+
+
+    const categoryIds =
+        getSelectedCategoryIds();
 
 
     const listingType =
@@ -745,6 +998,17 @@ async function submitBookListing(event) {
         document
             .getElementById("book-condition")
             .value;
+
+
+    if (categoryIds.length === 0) {
+
+        alert(
+            "Please select at least one category."
+        );
+
+        return;
+
+    }
 
 
     /* Sale listings require a price */
@@ -766,62 +1030,114 @@ async function submitBookListing(event) {
     }
 
 
-    /* Build listing object for API */
-
-    const listingData = {
-
-        book_id:
-            Number(bookId),
-
-        seller_id:
-            Number(sellerId),
-
-        listing_type:
-            listingType,
-
-        condition:
-            condition,
-
-        status:
-            "Available"
-
-    };
-
-
-    /* Include price only if entered */
-
-    if (price !== "") {
-
-        listingData.price =
-            Number(price);
-
-    }
-
-
     try {
 
-        await apiRequest(
-            "user_books.php",
-            {
+        /* Step 1: create a new BOOKS_CATALOG entry for this title/author.
+           Every listing creates its own catalog row - nothing here is
+           limited to books that already exist in the database. */
 
-                method: "POST",
+        const catalogData = {
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+            category_ids:
+                categoryIds,
 
-                body:
-                    JSON.stringify(
-                        listingData
-                    )
+            managed_by_admin_id:
+                currentUser.user_id,
 
-            }
-        );
+            title:
+                title,
+
+            author:
+                author,
+
+            isbn:
+                isbn
+
+        };
+
+        const newBook =
+            await apiRequest(
+                "books_catalog.php",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            catalogData
+                        )
+
+                }
+            );
+
+
+        /* Step 2: create the USER_BOOKS listing, pointing at the book
+           we just created and the currently logged-in seller */
+
+        const listingData = {
+
+            book_id:
+                newBook.book_id,
+
+            seller_id:
+                currentUser.user_id,
+
+            listing_type:
+                listingType,
+
+            condition:
+                condition,
+
+            status:
+                "Available"
+
+        };
+
+        /* Include price only if entered */
+
+        if (price !== "") {
+
+            listingData.price =
+                Number(price);
+
+        }
+
+        const newListing =
+            await apiRequest(
+                "user_books.php",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            listingData
+                        )
+
+                }
+            );
 
 
         alert(
             "Book listed successfully!"
+        );
+
+
+        /* Show the newly created listing back to the user */
+
+        showNewListingResult(
+            newListing,
+            newBook
         );
 
 
@@ -847,6 +1163,59 @@ async function submitBookListing(event) {
         );
 
     }
+
+}
+
+
+/* DISPLAY THE LISTING JUST CREATED */
+
+function showNewListingResult(listing, book) {
+
+    const resultPanel =
+        document.getElementById(
+            "new-listing-result"
+        );
+
+    const detailsBody =
+        document.getElementById(
+            "new-listing-details"
+        );
+
+    if (!resultPanel || !detailsBody) {
+        return;
+    }
+
+    const rows = [
+
+        ["Inventory ID", listing.inventory_id],
+        ["Book ID", listing.book_id],
+        ["Seller ID", listing.seller_id],
+        ["Title", book.title],
+        ["Author", book.author],
+        ["ISBN", book.isbn],
+        ["Categories", formatCategoryNames(book)],
+        ["Listing Type", formatListingType(listing.listing_type)],
+        ["Condition", listing.condition],
+        ["Price", formatPrice(listing.price)],
+        ["Status", listing.status]
+
+    ];
+
+    detailsBody.innerHTML =
+        rows
+            .map(function (row) {
+
+                return `
+                    <tr>
+                        <th>${row[0]}</th>
+                        <td>${row[1]}</td>
+                    </tr>
+                `;
+
+            })
+            .join("");
+
+    resultPanel.style.display = "block";
 
 }
 
@@ -1649,6 +2018,8 @@ document.addEventListener(
                 loadTransactions();
 
             });
+
+        loadCategories();
 
     }
 );

@@ -135,6 +135,23 @@
                 </select>
 
 
+                <fieldset id="filter-category-group" class="checkbox-group">
+
+                    <legend>
+                        Category (check any to filter):
+                    </legend>
+
+                    <div id="filter-category-options">
+
+                        <p class="checkbox-group-empty">
+                            Loading categories...
+                        </p>
+
+                    </div>
+
+                </fieldset>
+
+
                 <button type="submit">
                     Search
                 </button>
@@ -151,6 +168,7 @@
                         <th>Book ID</th>
                         <th>Title</th>
                         <th>Author</th>
+                        <th>Category</th>
                         <th>Seller</th>
                         <th>Listing Type</th>
                         <th>Condition</th>
@@ -167,7 +185,7 @@
 
                     <tr>
 
-                        <td colspan="9">
+                        <td colspan="10">
                             No books loaded yet.
                         </td>
 
@@ -190,22 +208,46 @@
             </p>
 
 
-            <!-- Form follows USER_BOOKS table/API -->
+            <!-- Form creates a BOOKS_CATALOG entry, then a USER_BOOKS listing tied to the logged-in seller -->
             <form id="list-book-form">
 
 
-                <label for="book-id">
-                    Book ID:
+                <label for="book-title">
+                    Book Title:
                 </label>
 
-                <input type="number" id="book-id" name="book_id" required>
+                <input type="text" id="book-title" name="title" required>
 
 
-                <label for="seller-id">
-                    Seller ID:
+                <label for="book-author">
+                    Book Author:
                 </label>
 
-                <input type="number" id="seller-id" name="seller_id" required>
+                <input type="text" id="book-author" name="author" required>
+
+
+                <label for="book-isbn">
+                    ISBN:
+                </label>
+
+                <input type="text" id="book-isbn" name="isbn" required>
+
+
+                <fieldset id="book-category-group" class="checkbox-group">
+
+                    <legend>
+                        Categories (select one or more):
+                    </legend>
+
+                    <div id="book-category-options">
+
+                        <p class="checkbox-group-empty">
+                            Loading categories...
+                        </p>
+
+                    </div>
+
+                </fieldset>
 
 
                 <label for="listing-type">
@@ -270,6 +312,23 @@
                 </button>
 
             </form>
+
+
+            <!-- Shows the listing that was just created (populated by JavaScript) -->
+            <div id="new-listing-result" style="display: none;">
+
+                <h3>
+                    Your Book Has Been Listed
+                </h3>
+
+                <table class="detail-table">
+
+                    <tbody id="new-listing-details">
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </section>
 

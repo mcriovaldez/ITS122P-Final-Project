@@ -1,13 +1,10 @@
 /* LIBROWSE BOOK EXCHANGE - Frontend Authentication JavaScript */
 
-const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-const API_BASE = isLocal
-    ? "http://127.0.0.1:8000/api"
-    : "https://book-marketplace-backend.vercel.app/api";
+const API_BASE = "http://127.0.0.1:8000/api";
 
 /**
  * Built-in mock customer accounts for offline/demo resilience
- * matching the SQL seed in backend/sql/queries.sql
+ * matching the SQL seed in book-marketplace-backend/sql/queries.sql
  */
 const DEMO_CUSTOMERS = [
     {
@@ -70,7 +67,7 @@ async function apiRequest(endpoint, options = {}) {
         if (err.name === "TypeError" && err.message.includes("fetch")) {
             throw new Error(
                 "Cannot connect to the backend at " + API_BASE +
-                ". Please ensure your PHP server is running (e.g., php -S 127.0.0.1:8000 -t backend)."
+                ". Please ensure your PHP server is running (e.g., php -S 127.0.0.1:8000 -t book-marketplace-backend)."
             );
         }
         throw err;

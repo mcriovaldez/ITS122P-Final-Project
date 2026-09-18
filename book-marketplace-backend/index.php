@@ -3,15 +3,6 @@
  * API root — quick health check and endpoint directory.
  * Visit /index.php to confirm the DB connection works and see all routes.
  */
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept');
-
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
-
 require_once __DIR__ . '/lib/bootstrap.php';
 
 header('Content-Type: application/json');

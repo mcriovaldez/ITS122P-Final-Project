@@ -71,6 +71,35 @@ INSERT INTO `BOOKS_CATALOG` (`book_id`, `category_id`, `managed_by_admin_id`, `t
   (8, 8, 2, 'Foundations of Algorithms', 'T. Cormen', '9780262033856'),
   (9, 9, 1, 'Atomic Habits Revisited', 'Owen Clarke', '9780593189337'),
   (10, 10, 2, 'Moonlit Rebellion, Vol. 1', 'Kenji Arata', '9781401290421');
+
+
+/* BOOK_CATEGORY_MAP - links books to one or more categories (a book can belong to several) */
+CREATE TABLE `BOOK_CATEGORY_MAP` (
+  `book_id` INT UNSIGNED NOT NULL,
+  `category_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`book_id`, `category_id`),
+  CONSTRAINT `fk_book_category_map_book_id` FOREIGN KEY (`book_id`) REFERENCES `BOOKS_CATALOG`(`book_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_book_category_map_category_id` FOREIGN KEY (`category_id`) REFERENCES `BOOK_CATEGORIES`(`category_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/* Sample data for BOOK_CATEGORY_MAP - every book keeps its original category,
+   plus a couple of books shown here with a second category to demonstrate
+   that a book can be tagged with more than one */
+INSERT INTO `BOOK_CATEGORY_MAP` (`book_id`, `category_id`) VALUES
+  (1, 1),
+  (2, 2),
+  (3, 3),
+  (3, 5),
+  (4, 4),
+  (4, 9),
+  (5, 5),
+  (6, 6),
+  (6, 9),
+  (7, 7),
+  (8, 8),
+  (9, 9),
+  (10, 10),
+  (10, 3);
 CREATE TABLE `USER_BOOKS` (
   `inventory_id` INT UNSIGNED AUTO_INCREMENT NOT NULL,
   `book_id` INT UNSIGNED NOT NULL,
@@ -159,7 +188,7 @@ CREATE TABLE `REPORTS` (
   `status` ENUM('Pending','Under_Review','Approved','Rejected','Resolved','Dismissed') NOT NULL DEFAULT 'Pending',
   `resolution_notes` TEXT DEFAULT NULL,
   `submitted_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `resolved_at` TIMESTAMP DEFAULT NULL,
+  `resolved_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`report_id`),
   CONSTRAINT `fk_reports_submitted_by_id` FOREIGN KEY (`submitted_by_id`) REFERENCES `USER`(`user_id`) ON DELETE RESTRICT,
   CONSTRAINT `fk_reports_reviewed_by_id` FOREIGN KEY (`reviewed_by_id`) REFERENCES `USER`(`user_id`) ON DELETE SET NULL

@@ -8,3 +8,4 @@ This ITS122P Final Project focuses on developing a **Book Exchange System** desi
 - Domingo, Nicholas Reuben
 - Lualhati, Jethro Lee
 - Riovaldez, Miguel
+- Medina, Gabriel Aze

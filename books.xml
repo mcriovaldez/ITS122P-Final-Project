@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    LIBROWSE BOOK EXCHANGE
+    XML Book Data
+
+    This file stores structured book listing data
+    using XML.
+-->
+
+<librowse>
+
+    <!-- General information about the XML data -->
+    <information>
+
+        <system_name>
+            Librowse Book Exchange
+        </system_name>
+
+        <data_type>
+            Book Listings
+        </data_type>
+
+        <format>
+            XML
+        </format>
+
+    </information>
+
+
+    <!-- ==================== BOOK LISTINGS ==================== -->
+
+    <books>
+
+
+        <!-- Book Listing 1 -->
+        <book inventory_id="1">
+
+            <book_id>
+                1
+            </book_id>
+
+            <title>
+                The Silent Orchard
+            </title>
+
+            <author>
+                Marie Devon
+            </author>
+
+            <isbn>
+                9780134190441
+            </isbn>
+
+            <category>
+                Fiction
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    5
+                </seller_id>
+
+                <username>
+                    emma_clarke
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_sale
+            </listing_type>
+
+            <price>
+                12.99
+            </price>
+
+            <condition>
+                Good
+            </condition>
+
+            <status>
+                Available
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 2 -->
+        <book inventory_id="2">
+
+            <book_id>
+                2
+            </book_id>
+
+            <title>
+                A Brief History of Everything
+            </title>
+
+            <author>
+                Daniel Cho
+            </author>
+
+            <isbn>
+                9780262033849
+            </isbn>
+
+            <category>
+                Non-Fiction
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    6
+                </seller_id>
+
+                <username>
+                    liam_brown
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_trade
+            </listing_type>
+
+            <price>
+                0.00
+            </price>
+
+            <condition>
+                Acceptable
+            </condition>
+
+            <status>
+                Available
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 3 -->
+        <book inventory_id="3">
+
+            <book_id>
+                3
+            </book_id>
+
+            <title>
+                Starlight Exiles
+            </title>
+
+            <author>
+                Renata Voss
+            </author>
+
+            <isbn>
+                9780345391804
+            </isbn>
+
+            <category>
+                Science Fiction &amp; Fantasy
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    7
+                </seller_id>
+
+                <username>
+                    sofia_garcia
+                </username>
+
+            </seller>
+
+            <listing_type>
+                Both
+            </listing_type>
+
+            <price>
+                15.50
+            </price>
+
+            <condition>
+                New
+            </condition>
+
+            <status>
+                In_transaction
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 4 -->
+        <book inventory_id="4">
+
+            <book_id>
+                4
+            </book_id>
+
+            <title>
+                The Last Alibi
+            </title>
+
+            <author>
+                Connor Hayes
+            </author>
+
+            <isbn>
+                9780307474279
+            </isbn>
+
+            <category>
+                Mystery &amp; Thriller
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    8
+                </seller_id>
+
+                <username>
+                    noah_martin
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_sale
+            </listing_type>
+
+            <price>
+                9.75
+            </price>
+
+            <condition>
+                Good
+            </condition>
+
+            <status>
+                Sold
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 5 -->
+        <book inventory_id="5">
+
+            <book_id>
+                5
+            </book_id>
+
+            <title>
+                Autumn in Verona
+            </title>
+
+            <author>
+                Isabel Marsh
+            </author>
+
+            <isbn>
+                9780451524936
+            </isbn>
+
+            <category>
+                Romance
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    9
+                </seller_id>
+
+                <username>
+                    ava_wilson
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_trade
+            </listing_type>
+
+            <price>
+                0.00
+            </price>
+
+            <condition>
+                Good
+            </condition>
+
+            <status>
+                Traded
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 6 -->
+        <book inventory_id="6">
+
+            <book_id>
+                6
+            </book_id>
+
+            <title>
+                Becoming Whole
+            </title>
+
+            <author>
+                Grace Nakamura
+            </author>
+
+            <isbn>
+                9780670785936
+            </isbn>
+
+            <category>
+                Biography &amp; Memoir
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    10
+                </seller_id>
+
+                <username>
+                    ethan_moore
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_sale
+            </listing_type>
+
+            <price>
+                18.00
+            </price>
+
+            <condition>
+                New
+            </condition>
+
+            <status>
+                Available
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 7 -->
+        <book inventory_id="7">
+
+            <book_id>
+                7
+            </book_id>
+
+            <title>
+                The Dragon Who Forgot to Roar
+            </title>
+
+            <author>
+                Lucy Pemberton
+            </author>
+
+            <isbn>
+                9780062315008
+            </isbn>
+
+            <category>
+                Children's Books
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    5
+                </seller_id>
+
+                <username>
+                    emma_clarke
+                </username>
+
+            </seller>
+
+            <listing_type>
+                Both
+            </listing_type>
+
+            <price>
+                7.25
+            </price>
+
+            <condition>
+                Acceptable
+            </condition>
+
+            <status>
+                Available
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 8 -->
+        <book inventory_id="8">
+
+            <book_id>
+                8
+            </book_id>
+
+            <title>
+                Foundations of Algorithms
+            </title>
+
+            <author>
+                T. Cormen
+            </author>
+
+            <isbn>
+                9780262033856
+            </isbn>
+
+            <category>
+                Academic &amp; Textbooks
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    6
+                </seller_id>
+
+                <username>
+                    liam_brown
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_sale
+            </listing_type>
+
+            <price>
+                45.00
+            </price>
+
+            <condition>
+                Good
+            </condition>
+
+            <status>
+                Available
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 9 -->
+        <book inventory_id="9">
+
+            <book_id>
+                9
+            </book_id>
+
+            <title>
+                Atomic Habits Revisited
+            </title>
+
+            <author>
+                Owen Clarke
+            </author>
+
+            <isbn>
+                9780593189337
+            </isbn>
+
+            <category>
+                Self-Help
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    7
+                </seller_id>
+
+                <username>
+                    sofia_garcia
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_trade
+            </listing_type>
+
+            <price>
+                0.00
+            </price>
+
+            <condition>
+                New
+            </condition>
+
+            <status>
+                Removed
+            </status>
+
+        </book>
+
+
+        <!-- Book Listing 10 -->
+        <book inventory_id="10">
+
+            <book_id>
+                10
+            </book_id>
+
+            <title>
+                Moonlit Rebellion, Vol. 1
+            </title>
+
+            <author>
+                Kenji Arata
+            </author>
+
+            <isbn>
+                9781401290421
+            </isbn>
+
+            <category>
+                Comics &amp; Graphic Novels
+            </category>
+
+            <seller>
+
+                <seller_id>
+                    8
+                </seller_id>
+
+                <username>
+                    noah_martin
+                </username>
+
+            </seller>
+
+            <listing_type>
+                For_sale
+            </listing_type>
+
+            <price>
+                22.30
+            </price>
+
+            <condition>
+                Good
+            </condition>
+
+            <status>
+                In_transaction
+            </status>
+
+        </book>
+
+
+    </books>
+
+</librowse>

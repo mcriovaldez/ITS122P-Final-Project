@@ -1,9 +1,14 @@
 <?php
 /**
  * API root — quick health check and endpoint directory.
- * Visit /index.php to confirm the DB connection works and see all routes.
+ * Visit / to confirm the DB connection works and see all routes.
  */
+<<<<<<< Updated upstream:book-marketplace-backend/index.php
 require_once __DIR__ . '/lib/bootstrap.php';
+=======
+
+require_once __DIR__ . '/../lib/bootstrap.php';
+>>>>>>> Stashed changes:backend/api/index.php
 
 header('Content-Type: application/json');
 
@@ -15,8 +20,9 @@ try {
 }
 
 echo json_encode([
-    'status'    => 'ok',
-    'database'  => $dbStatus,
+    'status'   => 'ok',
+    'database' => $dbStatus,
+
     'endpoints' => [
         'GET|POST /api/user.php',
         'GET|POST /api/book_categories.php',
@@ -27,5 +33,6 @@ echo json_encode([
         'GET|POST /api/reports.php',
         'GET|POST /api/system_records.php',
     ],
+
     'note' => 'Add ?id=<pk> for GET (single), PUT, DELETE on any endpoint above.',
 ], JSON_PRETTY_PRINT);

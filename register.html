@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Register - Librowse Book Exchange</title>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Librowse Book Exchange</h1>
+
+        <p>
+            Create a customer account to buy, trade, and list books.
+        </p>
+
+        <nav>
+            <a href="index.html">Marketplace</a>
+            <a href="login.html">Sign In</a>
+            <a href="register.html" class="active-nav">Create Account</a>
+        </nav>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <section class="auth-card" id="auth-section">
+
+            <!-- Tab Switcher -->
+            <div class="auth-tab-row">
+                <a href="login.html" class="auth-tab-btn">Sign In</a>
+                <a href="register.html" class="auth-tab-btn active-tab">Register</a>
+            </div>
+
+            <div class="auth-brand-badge">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Join the Community
+            </div>
+
+            <h2>Create Customer Account</h2>
+
+            <div id="auth-message" class="auth-message" style="display: none;"></div>
+
+            <!-- Existing active session container if already logged in -->
+            <div id="session-active-card" class="session-active-card" style="display: none;">
+                <p id="session-active-text">You are already signed in.</p>
+                <div class="session-actions">
+                    <a href="index.html" class="btn-continue">Go to Marketplace</a>
+                    <button type="button" id="session-logout-btn" class="btn-switch-user">Sign Out / Create New Account</button>
+                </div>
+            </div>
+
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register-username">
+                        Username:
+                    </label>
+                    <input type="text" id="register-username" required minlength="3" maxlength="50" pattern="^[a-zA-Z0-9_]+$" placeholder="e.g. bookworm_99" autocomplete="username">
+                    <span class="input-helper-text">3-50 characters. Letters, numbers, and underscores only.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">
+                        Email Address:
+                    </label>
+                    <input type="email" id="register-email" required placeholder="e.g. you@example.com" autocomplete="email">
+                    <span class="input-helper-text">Used for exchange updates and notifications.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">
+                        Password:
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="register-password" required minlength="6" placeholder="Choose a secure password" autocomplete="new-password">
+                        <button type="button" class="toggle-password-btn" data-target="register-password" aria-label="Toggle password visibility" title="Toggle password visibility">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="input-helper-text">Minimum 6 characters.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm-password">
+                        Confirm Password:
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="register-confirm-password" required minlength="6" placeholder="Re-enter your password" autocomplete="new-password">
+                        <button type="button" class="toggle-password-btn" data-target="register-confirm-password" aria-label="Toggle password visibility" title="Toggle password visibility">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="password-match-indicator" class="password-match-hint"></div>
+                </div>
+
+                <button type="submit" id="register-submit-btn" class="auth-submit-btn">
+                    <span>Create Account</span>
+                </button>
+            </form>
+
+            <p class="auth-switch-link">
+                Already have an account?
+                <a href="login.html">Sign in here</a>
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Librowse Book Exchange</p>
+        <p>ITS122P Final Project</p>
+    </footer>
+
+    <script src="auth.js"></script>
+
+</body>
+
+</html>

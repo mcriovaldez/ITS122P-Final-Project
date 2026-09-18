@@ -33,6 +33,187 @@ let userMap = {};
 
 let inventoryMap = {};
 
+let currentUser = null;
+
+
+/* AUTH HELPERS */
+
+function loadCurrentUser() {
+
+    try {
+
+        const stored =
+            localStorage.getItem(
+                "librowseCurrentUser"
+            );
+
+        currentUser =
+            stored ? JSON.parse(stored) : null;
+
+    } catch {
+
+        currentUser = null;
+
+    }
+
+}
+
+
+function updateAuthStatusUI() {
+
+    const authStatus =
+        document.getElementById(
+            "auth-status"
+        );
+
+
+    if (!authStatus) {
+        return;
+    }
+
+
+    if (!currentUser) {
+
+        authStatus.innerHTML = `
+            <a href="login.html">
+                Sign in
+            </a>
+            <a href="register.html">
+                Create account
+            </a>
+        `;
+
+        return;
+
+    }
+
+
+    authStatus.innerHTML = `
+        <span>
+            Signed in as <strong>${currentUser.username}</strong>
+        </span>
+
+        <button id="logout-button" type="button">
+            Log out
+        </button>
+    `;
+
+
+    const logoutButton =
+        document.getElementById(
+            "logout-button"
+        );
+
+
+    if (logoutButton) {
+
+        logoutButton.addEventListener(
+            "click",
+            function () {
+
+                localStorage.removeItem(
+                    "librowseCurrentUser"
+                );
+
+                currentUser = null;
+
+                updateAuthStatusUI();
+
+                alert("You have been logged out.");
+
+                window.location.href =
+                    "login.html";
+
+            }
+        );
+
+    }
+
+}
+
+
+function requireAuthenticatedCustomer() {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login or register first."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    if (currentUser.role !== "Customer") {
+
+        alert(
+            "This page currently supports Customer accounts only."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+function applyCurrentUserToForms() {
+
+    if (!currentUser) {
+        return;
+    }
+
+
+    const sellerIdInput =
+        document.getElementById(
+            "seller-id"
+        );
+
+    if (sellerIdInput) {
+        sellerIdInput.value =
+            currentUser.user_id;
+
+        sellerIdInput.readOnly = true;
+    }
+
+
+    const customerIdInput =
+        document.getElementById(
+            "customer-id"
+        );
+
+    if (customerIdInput) {
+        customerIdInput.value =
+            currentUser.user_id;
+
+        customerIdInput.readOnly = true;
+    }
+
+
+    const submittedByInput =
+        document.getElementById(
+            "submitted-by"
+        );
+
+    if (submittedByInput) {
+        submittedByInput.value =
+            currentUser.user_id;
+
+        submittedByInput.readOnly = true;
+    }
+
+}
+
 
 /* GENERAL API FUNCTION */
 
@@ -536,9 +717,11 @@ async function submitBookListing(event) {
 
 
     const sellerId =
-        document
-            .getElementById("seller-id")
-            .value;
+        currentUser
+            ? currentUser.user_id
+            : document
+                .getElementById("seller-id")
+                .value;
 
 
     const listingType =
@@ -667,12 +850,12 @@ async function submitBookListing(event) {
 
 async function buyBook(listing) {
 
-    /* TODO: Replace with authenticated user ID */
+    if (!requireAuthenticatedCustomer()) {
+        return;
+    }
 
     const buyerId =
-        prompt(
-            "Enter your Customer User ID:"
-        );
+        String(currentUser.user_id);
 
 
     if (!buyerId) {
@@ -761,10 +944,12 @@ async function buyBook(listing) {
 
 async function tradeBook(listing) {
 
+    if (!requireAuthenticatedCustomer()) {
+        return;
+    }
+
     const buyerId =
-        prompt(
-            "Enter your Customer User ID:"
-        );
+        String(currentUser.user_id);
 
 
     if (!buyerId) {
@@ -875,9 +1060,22 @@ async function loadTransactions() {
         `;
 
 
-        transactions =
+        const allTransactions =
             await apiRequest(
                 "transactions.php"
+            );
+
+        transactions =
+            allTransactions.filter(
+                function (transaction) {
+
+                    return Number(
+                        transaction.buyer_id
+                    ) === Number(
+                        currentUser.user_id
+                    );
+
+                }
             );
 
 
@@ -1134,11 +1332,13 @@ async function submitRefund(event) {
 
 
     const customerId =
-        document
-            .getElementById(
-                "customer-id"
-            )
-            .value;
+        currentUser
+            ? currentUser.user_id
+            : document
+                .getElementById(
+                    "customer-id"
+                )
+                .value;
 
 
     const reason =
@@ -1221,11 +1421,13 @@ async function submitReport(event) {
 
 
     const submittedBy =
-        document
-            .getElementById(
-                "submitted-by"
-            )
-            .value;
+        currentUser
+            ? currentUser.user_id
+            : document
+                .getElementById(
+                    "submitted-by"
+                )
+                .value;
 
 
     const category =
@@ -1330,6 +1532,16 @@ async function submitReport(event) {
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
+        loadCurrentUser();
+
+        if (!requireAuthenticatedCustomer()) {
+            return;
+        }
+
+        updateAuthStatusUI();
+
+        applyCurrentUserToForms();
 
 
         /* SEARCH */

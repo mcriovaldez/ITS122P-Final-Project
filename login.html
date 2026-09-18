@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Login - Librowse Book Exchange</title>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Librowse Book Exchange</h1>
+
+        <p>
+            Sign in to continue buying, trading, and listing books.
+        </p>
+
+        <nav>
+            <a href="index.html">Marketplace</a>
+            <a href="login.html" class="active-nav">Sign In</a>
+            <a href="register.html">Create Account</a>
+        </nav>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <section class="auth-card" id="auth-section">
+
+            <!-- Tab Switcher -->
+            <div class="auth-tab-row">
+                <a href="login.html" class="auth-tab-btn active-tab">Sign In</a>
+                <a href="register.html" class="auth-tab-btn">Register</a>
+            </div>
+
+            <div class="auth-brand-badge">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                </svg>
+                Secure Authentication
+            </div>
+
+            <h2>Customer Sign In</h2>
+
+            <div id="auth-message" class="auth-message" style="display: none;"></div>
+
+            <!-- Existing active session container if already logged in -->
+            <div id="session-active-card" class="session-active-card" style="display: none;">
+                <p id="session-active-text">You are already signed in.</p>
+                <div class="session-actions">
+                    <a href="index.html" class="btn-continue">Go to Marketplace</a>
+                    <button type="button" id="session-logout-btn" class="btn-switch-user">Sign Out / Switch User</button>
+                </div>
+            </div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-identifier">
+                        Email Address or Username:
+                    </label>
+                    <input type="text" id="login-identifier" required placeholder="e.g. emma.clarke@example.com or emma_clarke" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">
+                        Password:
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" required placeholder="Enter your password" autocomplete="current-password">
+                        <button type="button" class="toggle-password-btn" data-target="login-password" aria-label="Toggle password visibility" title="Toggle password visibility">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="login-submit-btn" class="auth-submit-btn">
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <!-- Quick Demo Accounts Helper -->
+            <div class="demo-accounts-card">
+                <div class="demo-accounts-title">
+                    <span>Quick Fill Demo Accounts</span>
+                    <span style="font-size: 11px; color: var(--text-gray); font-weight: normal;">Click to autofill</span>
+                </div>
+                <div class="demo-pills-row">
+                    <button type="button" class="demo-pill" data-username="emma_clarke" data-pass="password">
+                        <span>emma_clarke</span>
+                        <span class="role-tag">Customer</span>
+                    </button>
+                    <button type="button" class="demo-pill" data-username="liam_brown" data-pass="password">
+                        <span>liam_brown</span>
+                        <span class="role-tag">Customer</span>
+                    </button>
+                    <button type="button" class="demo-pill" data-username="noah_martin" data-pass="password">
+                        <span>noah_martin</span>
+                        <span class="role-tag">Customer</span>
+                    </button>
+                </div>
+            </div>
+
+            <p class="auth-switch-link">
+                Don't have an account yet?
+                <a href="register.html">Register here</a>
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Librowse Book Exchange</p>
+        <p>ITS122P Final Project</p>
+    </footer>
+
+    <script src="auth.js"></script>
+
+</body>
+
+</html>

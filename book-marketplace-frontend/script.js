@@ -8,8 +8,13 @@
    PHP back-end will run at: http://127.0.0.1:8000/
    API files are served from: /api/
 */
-const API_BASE =
-    "http://127.0.0.1:8000/api";
+const isLocal =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
+
+const API_BASE = isLocal
+    ? "http://127.0.0.1:8000/api"
+    : "https://book-marketplace-backend.vercel.app/api";
 
 
 /* GLOBAL DATA */

@@ -1,6 +1,9 @@
 /* LIBROWSE BOOK EXCHANGE - Frontend Authentication JavaScript */
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const API_BASE = isLocal
+    ? "http://127.0.0.1:8000/api"
+    : "https://book-marketplace-backend.vercel.app/api";
 
 /**
  * Built-in mock customer accounts for offline/demo resilience
